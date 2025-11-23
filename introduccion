@@ -6,3 +6,6 @@ El informe se estructura de manera que el lector pueda seguir paso a paso el pro
 De esta forma, el documento pretende servir como una guía clara y completa para comprender el uso de la ESPCAM en aplicaciones reales de reconocimiento visual y control automatizado.
 
 
+objetivos
+presentar el desarrollo y funcionamiento de un sistema de reconocimiento de objetos con la ESPCAM y Edge Impulse
+impletnar la documentacion en git hub y realizar carcasas para el prototipo
