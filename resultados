@@ -1,0 +1,44 @@
+El desarrollo del laboratorio permitió implementar con éxito un sistema de reconocimiento de objetos mediante la cámara ESPCAM y la librería generada en Edge Impulse. El prototipo identificó objetos previamente entrenados, mostrando la etiqueta correspondiente en un display OLED y activando LEDs específicos según el resultado de la inferencia.
+1. Configuración de la cámara ESPCAM
+Se configuró la cámara mediante la estructura camera_config_t, definiendo los pines del módulo y la resolución adecuada para mantener un equilibrio entre calidad de imagen y velocidad de inferencia.
+camera_config_t config;
+config.pixel_format = PIXFORMAT_RGB565;
+config.frame_size = FRAMESIZE_QVGA;
+esp_camera_init(&config);
+Explicación:
+Este bloque inicializa la cámara con formato RGB565 y resolución QVGA. Estas configuraciones fueron clave para evitar errores de memoria y asegurar una captura fluida de imágenes. Una resolución mayor reducía la velocidad de procesamiento, afectando el rendimiento del modelo.
+
+2. Integración del modelo de Edge Impulse
+El modelo entrenado en Edge Impulse se exportó como librería Arduino y se integró en el proyecto. El siguiente código muestra la ejecución de la inferencia:
+ei_camera_capture(&image);
+ei_impulse_result_t result = { 0 };
+run_classifier(&image, &result, false);
+Explicación:
+El dispositivo captura una imagen con la ESPCAM y ejecuta la función run_classifier() para analizarla con el modelo de aprendizaje automático.
+Los resultados obtenidos mostraron una precisión promedio del 100%, dependiendo de las condiciones de iluminación y distancia del objeto.
+3. Visualización de resultados
+Para validar la inferencia, los resultados se imprimieron primero en el Monitor Serie:
+for (size_t i = 0; i < result.classification.size; i++) {
+  ei_printf("%s: %.2f\n", result.classification[i].label,
+            result.classification[i].value);
+}
+Explicación:
+Este bloque muestra el nombre del objeto detectado y su porcentaje de certeza. Con esta prueba se verificó que la librería funcionaba correctamente antes de integrar el display OLED.
+Posteriormente, se programó la visualización en pantalla:
+display.clearDisplay();
+display.setTextSize(1);
+display.setTextColor(SSD1306_WHITE);
+display.setCursor(0, 0);
+display.print(result.classification[0].label);
+display.display();
+Explicación:
+El texto con la etiqueta del objeto se muestra en el display OLED, permitiendo una salida visual sin depender del monitor serie. La comunicación se estableció por protocolo I2C mediante los pines SDA y SCL.
+4. Activación de LEDs por objeto identificado
+Se conectaron tres LEDs, cada uno asociado a un objeto diferente. En el código se definió una lógica condicional que activa el LED correspondiente según la etiqueta reconocida:
+if (label == "taza") digitalWrite(led1, HIGH);
+else if (label == "libro") digitalWrite(led2, HIGH);
+else if (label == "celular") digitalWrite(led3, HIGH);
+Explicación:
+Esta estructura permite representar visualmente la clasificación del modelo. Cada LED simboliza un integrante del equipo o una categoría detectada.
+Durante las pruebas, el sistema respondió correctamente al reconocimiento, encendiendo el LED apropiado con un retardo menor a 1 segundo.
+El prototipo demostró cómo integrar visión artificial con microcontroladores de bajo costo, aplicando los conocimientos de configuración básica, comunicación I2C y control de salidas digitales.
