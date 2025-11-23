@@ -9,3 +9,12 @@ Para mejorar este prototipo en futuras versiones, se podrían implementar las si
 1.	Capturar más imágenes con diferentes ángulos, fondos e iluminación para aumentar la precisión del modelo de reconocimiento.
 2.	Utilizar un soporte fijo para evitar vibraciones y mejorar la nitidez durante la inferencia.
 3.	agregar más salidas visuales o sonoras 
+
+
+fuentes de informacion 
+[1] A. García y L. Torres, “Implementación de sistemas de visión artificial en microcontroladores ESP32-CAM,” Universidad Tecnológica de Pereira, 2023.
+[2] M. Rodríguez, “Introducción al Internet de las Cosas (IoT) y sus aplicaciones prácticas,” Revista de Innovación Tecnológica, vol. 12, no. 4, pp. 45–53, 2022.
+[3] J. López y C. Hernández, “Procesamiento de imágenes y reconocimiento de objetos mediante aprendizaje automático,” Universidad Nacional Autónoma de México, Facultad de Ingeniería, 2021.
+[4] Instituto Politécnico Nacional (IPN), “Configuración y programación de microcontroladores ESP32,” Departamento de Ingeniería Electrónica, 2024.
+[5] (Inglés) Edge Impulse Inc., “Getting Started with Edge Impulse for ESP32,” [Online]. Available: https://docs.edgeimpulse.com/docs/development-platforms/officially-supported-devices/espressif-esp32
+Accessed: Oct. 28, 2025.
