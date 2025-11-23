@@ -1,0 +1,48 @@
+INTRODUCCIÓN
+El presente informe técnico tiene como propósito guiar al lector en el desarrollo, configuración y funcionamiento de un sistema de reconocimiento de objetos utilizando la ESPCAM y la plataforma de inteligencia artificial Edge Impulse. A través de esta práctica, se busca demostrar cómo un dispositivo de bajo costo puede ejecutar tareas de visión computacional, aplicando los conocimientos adquiridos en los temas de configuración básica y programación de sistemas embebidos.
+La ESPCAM (ESP32-CAM) es un módulo basado en el microcontrolador ESP32, que incluye una cámara integrada y capacidad de conexión Wi-Fi y Bluetooth. Su versatilidad permite capturar imágenes, procesarlas localmente y enviar resultados a otros dispositivos o plataformas en la nube. Gracias a estas características, se ha convertido en una herramienta popular para el desarrollo de proyectos de Internet de las Cosas (IoT), sistemas de monitoreo y aplicaciones de inteligencia artificial embebida.
+Por otro lado, el reconocimiento de objetos consiste en el uso de algoritmos y modelos de aprendizaje automático que permiten identificar elementos dentro de una imagen o video. En este laboratorio, el modelo fue generado con Edge Impulse, una plataforma que facilita el entrenamiento y la implementación de redes neuronales ligeras, optimizadas para funcionar directamente en microcontroladores.
+El informe se estructura de manera que el lector pueda seguir paso a paso el proceso: desde la instalación y verificación del módulo, la generación e instalación de la librería, hasta la demostración práctica del sistema en funcionamiento. Además, se explican los resultados obtenidos, los segmentos de código más relevantes y las conclusiones derivadas de la experiencia.
+De esta forma, el documento pretende servir como una guía clara y completa para comprender el uso de la ESPCAM en aplicaciones reales de reconocimiento visual y control automatizado.
+
+DESARROLLO
+El desarrollo del proyecto se realizó siguiendo una secuencia de pasos técnicos que permitieron configurar la ESPCAM, generar la librería de reconocimiento de objetos en Edge Impulse, cargarla al microcontrolador y demostrar su funcionamiento. 
+1. Instalación y verificación de ESPCAM en Windows
+1.	Se inició conectando el módulo ESPCAM (AI Thinker) a la computadora mediante un adaptador USB a serial (FTDI o CP2102).
+2.	Se instalaron los drivers del conversor USB–TTL para que Windows reconociera correctamente el puerto COM asignado.
+3.	En el Arduino IDE, se abrió el menú Archivo → Preferencias y se agregó la URL del gestor de placas de Espressif:
+4.	https://dl.espressif.com/dl/package_esp32_index.json
+5.	Luego se seleccionó Herramientas → Placa → ESP32 Arduino → AI Thinker ESP32-CAM.
+2. Generación de librería en Edge Impulse
+1.	Se ingresó a la página https://studio.edgeimpulse.com y se creó un nuevo proyecto llamado “Reconocimiento de Objetos ESPCAM”.
+2.	Se capturaron imágenes utilizando la cámara del dispositivo o una cámara USB conectada. Cada conjunto de imágenes se etiquetó con el nombre del objeto (muñequito y labial).
+3.	Posteriormente, se realizó el entrenamiento del modelo seleccionando un bloque de aprendizaje de clasificación de imágenes 
+4.	Una vez completado el entrenamiento, se evaluó la precisión del modelo (mayor al 100%) y se exportó como “Arduino Library” para integrarla en el microcontrolador.
+3. Instalación de la librería en ESPCAM
+1.	La librería descargada desde Edge Impulse se importó en el Arduino IDE mediante la opción Programa → Incluir Librería → Añadir biblioteca .ZIP.
+2.	En el nuevo sketch, se incluyeron las cabeceras generadas por Edge Impulse y se inicializó la cámara.
+3.	Se verificó que el modelo pudiera procesar las imágenes capturadas por la ESPCAM de manera local, sin requerir conexión a internet.
+4.	Se subió el código al dispositivo utilizando la configuración:
+o	Placa: AI Thinker ESP32-CAM o	Modo de subida: UART (GPIO 0 conectado a GND durante la carga).
+ 
+
+4. Demostración del funcionamiento de ESPCAM con la librería
+1.	Con el modelo ya integrado, se conectó la cámara a la alimentación (5V – GND).
+2.	En el Monitor Serie se visualizaron los resultados del reconocimiento en tiempo real. Al colocar un objeto frente a la cámara, el sistema mostraba la etiqueta correspondiente con su nivel de confianza.
+3.	Se validó el funcionamiento correcto al observar que el modelo identificaba correctamente los objetos entrenados.
+ 
+5. Visualización de la etiqueta en display OLED y activación de LED
+1.	Se conectó un display OLED SSD1306 mediante el bus I2C (pines GPIO 14 y GPIO 15 o SDA/SCL dependiendo del esquema de conexión).
+2.	En el código, se añadieron las librerías necesarias:
+3.	#include <Wire.h>
+4.	#include <Adafruit_GFX.h>
+5.	#include <Adafruit_SSD1306.h>
+6.	Se configuró la pantalla para mostrar el texto del resultado de la inferencia:
+7.	display.clearDisplay();
+8.	display.setCursor(0,0);
+9.	display.print(result.classification[0].label);
+10.	display.display();
+11.	A su vez, se asignó un LED por cada objeto identificado, representando a cada integrante del equipo:
+12.	if (label == "muñequito") digitalWrite(led1, HIGH);
+13.	else if (label == "labial") digitalWrite(led2, HIGH);
+14.	Finalmente, se probó el sistema observando que al identificar un objeto, la pantalla mostraba su nombre y se encendía el LED correspondiente. Eso era lo que se contaba que se hiciera sin embargo en mi sistema no lo pude completar ya que no me mostraba nada y se termino fundiendo.
